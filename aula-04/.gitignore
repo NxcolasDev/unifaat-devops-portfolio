@@ -1,0 +1,18 @@
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+tfplan
+aws-creds.sh
+
+# Credenciais AWS Academy (NUNCA versionar)
+aws-creds.sh
+
+# Chaves SSH
+*.pem
+*.key
+
+# OS
+.DS_Store
+Thumbs.db
