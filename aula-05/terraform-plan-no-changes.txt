@@ -1,0 +1,29 @@
+[33m╷[0m[0m
+[33m│[0m [0m[1m[33mWarning: [0m[0m[1mDeprecated Parameter[0m
+[33m│[0m [0m
+[33m│[0m [0m[0mThe parameter "dynamodb_table" is deprecated. Use parameter "use_lockfile" instead.
+[33m╵[0m[0m
+Acquiring state lock. This may take a few moments...
+[0m[1mdata.aws_availability_zones.available: Reading...[0m[0m
+[0m[1mdata.aws_ami.amazon_linux: Reading...[0m[0m
+[0m[1maws_key_pair.main: Refreshing state... [id=nxcolasdev-technova-key][0m
+[0m[1maws_vpc.main: Refreshing state... [id=vpc-0ed22e00361c9fe7b][0m
+[0m[1mdata.aws_availability_zones.available: Read complete after 1s [id=us-east-1][0m
+[0m[1mdata.aws_ami.amazon_linux: Read complete after 1s [id=ami-0d8e124066f7ed4f7][0m
+[0m[1maws_security_group.ec2: Refreshing state... [id=sg-06ae95e5c1a0fa367][0m
+[0m[1maws_internet_gateway.main: Refreshing state... [id=igw-0769fea1ddc286d2e][0m
+[0m[1maws_subnet.private_a: Refreshing state... [id=subnet-03fb9da34b4b5cabc][0m
+[0m[1maws_subnet.public: Refreshing state... [id=subnet-01ac4f8b54e4eac4b][0m
+[0m[1maws_subnet.private_b: Refreshing state... [id=subnet-03151a7764323c7e3][0m
+[0m[1maws_route_table.public: Refreshing state... [id=rtb-0a18343e55a993926][0m
+[0m[1maws_security_group.rds: Refreshing state... [id=sg-006e50395bc49ec1f][0m
+[0m[1maws_instance.api: Refreshing state... [id=i-03aff7c0fecb9a402][0m
+[0m[1maws_db_subnet_group.main: Refreshing state... [id=nxcolasdev-technova-db-subnet-group][0m
+[0m[1maws_route_table_association.public: Refreshing state... [id=rtbassoc-08280f456189709ab][0m
+[0m[1maws_db_instance.main: Refreshing state... [id=db-ZT7ZWYYWRYDNOW4ESPUDYB3HPE][0m
+
+[0m[1m[32mNo changes.[0m[1m Your infrastructure matches the configuration.[0m
+
+[0mTerraform has compared your real infrastructure against your configuration
+and found no differences, so no changes are needed.
+Releasing state lock. This may take a few moments...
