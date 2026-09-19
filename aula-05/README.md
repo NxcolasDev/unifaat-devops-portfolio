@@ -37,4 +37,16 @@ psql -h ENDPOINT -U technova_admin -d technova -c "SELECT version();"
 psql -h ENDPOINT -U technova_admin -d technova -c "SELECT * FROM orders;"
 ```
 
+As capturas versionadas em `evidencias/` documentam o fluxo executado:
+
+- `03-remote-state-s3-listagem.png`: state armazenado no S3.
+- `04-s3-seguranca-e-criptografia.png`: versionamento, criptografia e bloqueio publico.
+- `05-dynamodb-lock-ativo.png`: tabela DynamoDB de locking ativa.
+- `07-plan-sem-alteracoes.png`: plan limpo depois do apply.
+- `08-ssh-ec2-e-select-version.png`: SSH e conexao com PostgreSQL.
+- `09-dados-persistentes-orders.png`: dados persistidos consultados.
+- `10-destroy-complete-13-recursos.png`: limpeza concluida.
+
+A entrega formal esta em `entrega.md`. O arquivo `main.tf` coordena os arquivos de recursos, e o bootstrap do backend esta em `backend/`.
+
 Depois de capturar as evidencias, destrua primeiro a infraestrutura principal. Esvazie as versoes do bucket S3 e destrua o projeto `backend/`. Nunca versionar `terraform.tfvars`, `.tfstate`, `.terraform/`, `*.pem` ou credenciais.
