@@ -1,6 +1,6 @@
 # Trabalho em Aula - Aula 04: Arquitetura de Rede da TechNova
 
-**Aluno:** Nicolas Jesus e Silva  
+**Aluno:** Nicolas de Jesus Silva
 **RA:** 6325171  
 **Data:** 10/09/2026
 

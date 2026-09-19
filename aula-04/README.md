@@ -1,6 +1,6 @@
 # Infraestrutura TechNova - Aula 04
 
-**Aluno:** Nicolas Jesus e Silva  
+**Aluno:** Nicolas de Jesus Silva
 **RA:** 6325171  
 **Data:** 10/09/2026  
 **Repositorio:** https://github.com/NXCOLASDEV/unifaat-devops-portfolio

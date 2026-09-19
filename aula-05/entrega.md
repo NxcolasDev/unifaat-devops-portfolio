@@ -1,6 +1,6 @@
 # Entrega - Aula 05: RDS e Remote State
 
-**Aluno:** Nicolas Jesus e Silva  
+**Aluno:** Nicolas de Jesus Silva
 **RA:** 6325171  
 **Data:** 19/09/2026
 

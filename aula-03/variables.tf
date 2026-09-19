@@ -13,7 +13,7 @@ variable "ra" {
 variable "student_name" {
   description = "Nome do aluno usado nas tags dos recursos."
   type        = string
-  default     = "Nicolas Jesus e Silva"
+  default     = "Nicolas de Jesus Silva"
 }
 
 variable "project_name" {

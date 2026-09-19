@@ -1,4 +1,4 @@
-# Aula 03 - Terraform + IAM | Nicolas Jesus e Silva (RA 6325171)
+# Aula 03 - Terraform + IAM | Nicolas de Jesus Silva (RA 6325171)
 
 **Repositorio:** https://github.com/NXCOLASDEV/unifaat-devops-portfolio
 

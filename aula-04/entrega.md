@@ -1,6 +1,6 @@
 # Entrega - Aula 04: VPC + EC2 Multi-AZ
 
-**Aluno:** Nicolas Jesus e Silva  
+**Aluno:** Nicolas de Jesus Silva
 **RA:** 6325171  
 **Data:** 10/09/2026
 

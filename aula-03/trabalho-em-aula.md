@@ -1,6 +1,6 @@
 # Trabalho em Aula - Aula 03: Terraform e IAM
 
-**Aluno:** Nicolas Jesus e Silva  
+**Aluno:** Nicolas de Jesus Silva
 **RA:** 6325171  
 **Data:** 10/09/2026
 
