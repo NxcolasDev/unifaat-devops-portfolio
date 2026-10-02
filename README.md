@@ -14,10 +14,19 @@ Aqui documento minha evolução desde os fundamentos de Git e Docker até pipeli
 ## Estrutura
 
 - `aula-01/` — Fundamentos de Git e Docker
+- `aula-02/` — Git avançado e workflows de colaboração
+- `aula-03/` — Conteinerização, Docker Compose e automação
+- `aula-04/` — Infraestrutura e infraestrutura como código
+- `aula-05/` — Terraform + AWS + RDS + state remoto
+- `aula-06/` — Revisão de arquitetura e fundamentos avançados
+- `aula-07/` — Decomposição de problemas com IA e API de reservas de salas
 
 ## Aprendizados
 
-[Atualize esta seção a cada aula com seus principais aprendizados]
+- Aprendi a decompor problemas complexos em etapas menores para reduzir erro e melhorar a qualidade da solução.
+- Entendi que IA funciona melhor quando recebe contexto, regras e tarefas bem delimitadas.
+- Pratiquei a criação de APIs em JavaScript com Node.js e Express.
+- Validei a entrega por testes e execução real dos endpoints, em vez de assumir que a solução funciona sem verificar.
 
 # Aula 01 — Fundamentos de Git e Docker
 
