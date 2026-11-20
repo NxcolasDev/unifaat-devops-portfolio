@@ -1,0 +1,13 @@
+{
+  "source": "aws.cloudwatch",
+  "region": "us-east-1",
+  "detail-type": "CloudWatch Alarm State Change",
+  "detail": {
+    "alarmName": "TechNova-Error5xx",
+    "state": {
+      "value": "ALARM",
+      "timestamp": "2026-11-19T17:00:00Z",
+      "reason": "Payment gateway timeouts increased while Error5xx exceeded the configured threshold."
+    }
+  }
+}

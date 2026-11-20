@@ -1,0 +1,92 @@
+name: Aula 12 CD with automatic rollback
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "aula-12/**"
+      - ".github/workflows/cd-with-rollback.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: technova-api
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: aula-12
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push image
+        id: image
+        env:
+          REGISTRY: ${{ steps.ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          image="${REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}"
+          docker build --tag "$image" aula-12
+          docker push "$image"
+          echo "uri=$image" >> "$GITHUB_OUTPUT"
+
+      - name: Prepare SSH access
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.DEPLOY_SSH_KNOWN_HOSTS }}
+        run: |
+          set -euo pipefail
+          install -m 700 -d "$HOME/.ssh"
+          printf '%s\n' "$SSH_PRIVATE_KEY" > "$HOME/.ssh/id_ed25519"
+          chmod 600 "$HOME/.ssh/id_ed25519"
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          chmod 600 "$HOME/.ssh/known_hosts"
+
+      - name: Deploy new image
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          SSH_USER: ${{ secrets.DEPLOY_SSH_USER }}
+          DEPLOY_IMAGE_URI: ${{ steps.image.outputs.uri }}
+        run: |
+          set -euo pipefail
+          ssh "$SSH_USER@$DEPLOY_HOST" \
+            "AWS_REGION='$AWS_REGION' DEPLOY_IMAGE_URI='$DEPLOY_IMAGE_URI' bash -s" \
+            < aula-12/scripts/deploy.sh
+
+      - name: Verify the deployed service
+        env:
+          HEALTH_URL: ${{ secrets.HEALTH_URL }}
+        run: bash aula-12/scripts/health-check.sh
+
+      - name: Roll back to the previous ECR image
+        if: failure()
+        env:
+          DEPLOY_HOST: ${{ secrets.DEPLOY_HOST }}
+          SSH_USER: ${{ secrets.DEPLOY_SSH_USER }}
+          AWS_REGION: ${{ env.AWS_REGION }}
+        run: |
+          set -euo pipefail
+          ssh "$SSH_USER@$DEPLOY_HOST" \
+            "AWS_REGION='$AWS_REGION' bash -s" \
+            < aula-12/scripts/rollback.sh
+
+      - name: Report rollback result
+        if: failure()
+        run: echo "Deployment failed; rollback was attempted. Review the deploy and rollback logs."

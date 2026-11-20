@@ -1,0 +1,7 @@
+node_modules/
+lambda-aiops/node_modules/
+lambda-aiops/function.zip
+terraform/.terraform/
+terraform/terraform.tfstate*
+terraform/*.tfvars
+!terraform/terraform.tfvars.example

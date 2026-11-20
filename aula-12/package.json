@@ -1,0 +1,21 @@
+{
+  "name": "technova-aula12-operations",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Feature flags, reversible migrations and operational telemetry for Aula 12",
+  "scripts": {
+    "start": "node src/server.js",
+    "test": "node --test",
+    "migrate": "node migrations/cli.js"
+  },
+  "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.800.0",
+    "@aws-sdk/client-cloudwatch": "^3.800.0",
+    "express": "^4.21.2",
+    "pg": "^8.13.1"
+  },
+  "devDependencies": {
+    "pg-mem": "^3.0.5",
+    "supertest": "^7.0.0"
+  }
+}

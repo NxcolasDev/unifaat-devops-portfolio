@@ -1,0 +1,9 @@
+{
+  "name": "technova-aiops-lambda",
+  "version": "1.0.0",
+  "private": true,
+  "main": "index.js",
+  "dependencies": {
+    "@aws-sdk/client-bedrock-runtime": "^3.800.0"
+  }
+}
