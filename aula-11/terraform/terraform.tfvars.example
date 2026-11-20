@@ -1,0 +1,7 @@
+aws_region        = "us-east-1"
+vpc_id            = "vpc-REPLACE_WITH_LAB_VPC"
+public_subnet_ids = ["subnet-REPLACE_A", "subnet-REPLACE_B"]
+stable_instance_id = "i-REPLACE_STABLE_INSTANCE"
+canary_instance_id = "i-REPLACE_CANARY_INSTANCE"
+stable_weight      = 100
+canary_weight      = 0

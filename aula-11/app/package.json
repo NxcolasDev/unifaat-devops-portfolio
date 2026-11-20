@@ -1,0 +1,9 @@
+{
+  "name": "technova-api-canary-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Small HTTP service used to validate the Aula 11 ALB canary rollout",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

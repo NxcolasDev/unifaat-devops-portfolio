@@ -1,0 +1,96 @@
+name: Deploy TechNova Canary
+
+on:
+  workflow_dispatch:
+    inputs:
+      error_threshold:
+        description: "Maximum sampled HTTP error rate in percent"
+        required: true
+        default: "5"
+
+permissions:
+  contents: read
+
+env:
+  AWS_REGION: us-east-1
+  ECR_REPOSITORY: technova-api
+
+jobs:
+  build-deploy-rollout:
+    runs-on: ubuntu-latest
+    environment: aula-11-canary
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push image
+        id: image
+        env:
+          REGISTRY: ${{ steps.ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          image="${REGISTRY}/${ECR_REPOSITORY}:${IMAGE_TAG}"
+          docker build --tag "$image" aula-11/app
+          docker push "$image"
+          echo "uri=$image" >> "$GITHUB_OUTPUT"
+
+      - name: Prepare SSH access
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.CANARY_SSH_KEY }}
+          SSH_KNOWN_HOSTS: ${{ secrets.CANARY_SSH_KNOWN_HOSTS }}
+        run: |
+          set -euo pipefail
+          install -m 700 -d "$HOME/.ssh"
+          printf '%s\n' "$SSH_PRIVATE_KEY" > "$HOME/.ssh/id_ed25519"
+          chmod 600 "$HOME/.ssh/id_ed25519"
+          printf '%s\n' "$SSH_KNOWN_HOSTS" > "$HOME/.ssh/known_hosts"
+          chmod 600 "$HOME/.ssh/known_hosts"
+
+      - name: Deploy image to canary instance
+        env:
+          CANARY_HOST: ${{ secrets.CANARY_HOST }}
+          SSH_USER: ${{ secrets.CANARY_SSH_USER }}
+          IMAGE_URI: ${{ steps.image.outputs.uri }}
+        run: |
+          set -euo pipefail
+          ssh "$SSH_USER@$CANARY_HOST" \
+            "aws ecr get-login-password --region '$AWS_REGION' | docker login --username AWS --password-stdin '${{ steps.ecr.outputs.registry }}' &&
+             docker pull '$IMAGE_URI' &&
+             (docker stop technova-api-canary || true) &&
+             (docker rm technova-api-canary || true) &&
+             docker run -d --restart unless-stopped --name technova-api-canary -p 3000:3000 '$IMAGE_URI'"
+
+      - name: Run gradual canary rollout
+        env:
+          LISTENER_ARN: ${{ secrets.LISTENER_ARN }}
+          TG_STABLE_ARN: ${{ secrets.TG_STABLE_ARN }}
+          TG_CANARY_ARN: ${{ secrets.TG_CANARY_ARN }}
+          ALB_DNS: ${{ secrets.ALB_DNS }}
+          ERROR_THRESHOLD: ${{ inputs.error_threshold }}
+          WAIT_SECONDS: "60"
+        run: bash aula-11/scripts/canary-rollout.sh
+
+      - name: Roll back traffic after failure
+        if: failure()
+        env:
+          LISTENER_ARN: ${{ secrets.LISTENER_ARN }}
+          TG_STABLE_ARN: ${{ secrets.TG_STABLE_ARN }}
+          TG_CANARY_ARN: ${{ secrets.TG_CANARY_ARN }}
+        run: |
+          set -euo pipefail
+          aws elbv2 modify-listener \
+            --listener-arn "$LISTENER_ARN" \
+            --default-actions "[{\"Type\":\"forward\",\"ForwardConfig\":{\"TargetGroups\":[{\"TargetGroupArn\":\"$TG_STABLE_ARN\",\"Weight\":100},{\"TargetGroupArn\":\"$TG_CANARY_ARN\",\"Weight\":0}],\"TargetGroupStickinessConfig\":{\"Enabled\":true,\"DurationSeconds\":300}}}]"
